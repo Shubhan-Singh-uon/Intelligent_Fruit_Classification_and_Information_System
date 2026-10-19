@@ -1,0 +1,14 @@
+-- File: seed_fruit.sql
+-- Project: Intelligent Fruit Classification and Information System
+-- Description:
+--     Inserts the agreed initial fruit-information records and
+--     supporting source records into the SQLite database.
+--
+-- Author(s): Group 8
+-- Database Implementation Lead: Abeeha Mariam
+-- Content Contributors: Wajahat Manzoor, Shubhan Singh, Abeeha Mariam, Hasnain Younas
+-- Responsible Pillar: Pillar 3 - Database & Information System
+--
+-- Note:
+--     All four members contribute and verify content across the
+--     applicable tables. Prediction history is populated at runtime.
