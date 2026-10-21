@@ -1,0 +1,10 @@
+-- File: schema.sql
+-- Project: Intelligent Fruit Classification and Information System
+-- Description:
+--     Defines the SQLite schema for FRUIT, NUTRITION,
+--     HEALTH_BENEFIT, USE, FUN_FACT, SOURCE, and
+--     PREDICTION_HISTORY, according to the agreed EER design.
+--
+-- Author: Abeeha Mariam
+-- Responsible Pillar: Pillar 3 - Database & Information System
+-- Maintainers: Abeeha Mariam

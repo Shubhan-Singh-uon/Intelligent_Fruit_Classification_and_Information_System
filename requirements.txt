@@ -1,3 +1,10 @@
+# File: requirements.txt
+# Project: Intelligent Fruit Classification and Information System
+# Description: Lists the Python packages required to install and run
+# the application, ML inference, preprocessing, and database workflow.
+# Author: Group 8
+# Responsible Area: Shared/Core
+
 streamlit
 scikit-learn
 pandas

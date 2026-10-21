@@ -1,3 +1,11 @@
+# File: .gitignore
+# Project: Intelligent Fruit Classification and Information System
+# Description: Excludes local environments, generated databases,
+# temporary files, caches, and other files that should not
+# be committed to version control.
+# Author: Group 8
+# Responsible Area: Shared/Core
+
 # Python
 __pycache__/
 *.py[cod]
