@@ -12,3 +12,77 @@
 -- Note:
 --     All four members contribute and verify content across the
 --     applicable tables. Prediction history is populated at runtime.
+-- ============================================
+-- 1. FRUIT
+-- ============================================
+INSERT INTO FRUIT (fruit_id, fruit_name, model_label, description) VALUES
+    (1, 'Apple', 'apple', 'An apple is a round, edible fruit covered  with smooth skin in shades of red, green, or yellow and a crisp, whitish interior.'),
+    (2, 'Banana', 'banana', 'A banana is an elongated, edible fruit with a soft white flesh covered by a thick, removable peel in shades of yellow or green.');
+
+-- ============================================
+-- 2. SOURCE
+-- ============================================
+INSERT INTO SOURCE (source_id, source_name, source_url, access_date) VALUES
+    (1, 'F000110: Apple, red skin, unpeeled, raw', 'https://www.foodstandards.gov.au/science-data/food-nutrient-databases/afcd/search/food/F000110', '2026-10-16'),
+    (2, 'F000262: Banana, cavendish, peeled, raw', 'https://www.foodstandards.gov.au/science-data/food-nutrient-databases/afcd/search/food/F000262', '2026-10-16'),
+    (3, 'St. Vincent''s Health System- 5 Reasons to Eat More Apples', 'https://stvincents.org/about-us/news-press/news-detail?articleId=59557&publicid=395', '2026-10-16'),
+    (4, 'Harvard Health Publishing – 11 Foods That Lower Cholesterol', 'https://www.health.harvard.edu/heart-health/11-foods-that-lower-cholesterol-4BTQX4EV', '2026-10-16'),
+    (5, 'Harvard T.H. Chan School of Public Health – Apples', 'https://nutritionsource.hsph.harvard.edu/food-features/apples/', '2026-10-16'),
+    (6, 'Harvard T.H. Chan School of Public Health – Bananas', 'https://nutritionsource.hsph.harvard.edu/food-features/bananas/', '2026-10-16'),
+    (7, 'Cleveland Clinic-Peel It Back: Let’s Look at the Health Benefits of Bananas', 'https://health.clevelandclinic.org/benefits-of-bananas', '2026-10-16'),
+    (8, 'Canadian Geographic-Canada’s Long History of Apple Growing', 'https://canadiangeographic.ca/articles/canadas-long-history-of-apple-growing/', '2026-10-16'),
+    (9, 'Wikipedia-Rosaceae', 'https://en.wikipedia.org/wiki/Rosaceae', '2026-10-16'),
+    (10, 'Washington State University (WSU) Tree Fruit-Varrieties Apple', 'https://treefruit.wsu.edu/web-article/apple-varieties/', '2026-10-16'),
+    (11, 'BBC-The birthplace of the modern apple', 'https://www.bbc.com/travel/article/20181120-the-birthplace-of-the-modern-apple', '2026-10-16'),
+    (12, 'Live Science-Why are bananas berries but strawberries aren''t?', 'https://www.livescience.com/57477-why-are-bananas-considered-berries.html', '2026-10-16'),
+    (13, 'Michigan State Univeristy -Plant science at the dinner table: bananas', 'https://www.canr.msu.edu/news/plant-science-at-the-dinner-table-bananas', '2026-10-16'),
+    (14, 'The Guardian', 'https://www.theguardian.com/commentisfree/2024/mar/22/1000-varieties-banana-lack-of-diversity-extinction', '2026-10-16'),
+    (15, 'Australian Bananas-Mind Bending Facts', 'https://www.australianbananas.com.au/pages/all-about-bananas/mind-bending-facts', '2026-10-16');
+
+-- ============================================
+-- 3. NUTRITION
+-- ============================================
+INSERT INTO NUTRITION (nutrition_id, fruit_id, source_id, serving_basis, energy_kcal, protein_g, carbohydrate_g, sugars_g, fibre_g, fat_g, potassium_mg, vitamin_c_mg) VALUES
+    (1, 1, 1, '100g', 57.8, 0.2, 12.7, 12.4, 2.5, 0, 115, 7),
+    (2, 2, 2, '100g', 95.4, 1.4, 19.9, 13.4, 2.2, 0.2, 348, 5);
+
+-- ============================================
+-- 4. USE
+-- ============================================
+INSERT INTO USE (use_id, fruit_id, use_description) VALUES
+    (1, 1, 'Eat Fresh'),
+    (2, 1, 'Baking'),
+    (3, 1, 'Smoothies'),
+    (4, 1, 'Juices'),
+    (5, 2, 'Eat Fresh'),
+    (6, 2, 'Baking'),
+    (7, 2, 'Smoothies'),
+    (8, 2, 'Desserts'),
+    (9, 1, 'Spreads'),
+    (10, 1, 'Salads'),
+    (11, 2, 'Snacks'),
+    (12, 2, 'Toppings');
+
+-- ============================================
+-- 5. HEALTH BENEFIT
+-- ============================================
+INSERT INTO HEALTH_BENEFIT (benefit_id, fruit_id, source_id, benefit_description) VALUES
+    (1, 1, 3, 'Apples contain dietary fibre, which supports healthy digestion.'),
+    (2, 1, 4, 'Apples contain fibre called pectin which can help lower cholesterol levels .'),
+    (3, 1, 5, 'Research suggests apple consumption may have beneficial effects on some cardiovascular risk factors.'),
+    (4, 2, 6, 'Bananas are rich in potassium, which supports normal heart function, muscle contraction, and healthy blood pressure.'),
+    (5, 2, 7, 'Bananas provide carbohydrates that supply energy for physical activity, making them a convenient pre-workout snack.'),
+    (6, 2, 6, 'Unripe bananas contain resistant starch, which acts as a prebiotic and helps nourish beneficial gut bacteria.');
+
+-- ============================================
+-- 6. FUN FACT
+-- ============================================
+INSERT INTO FUN_FACT (fact_id, fruit_id, source_id, fact_text) VALUES
+    (1, 1, 8, 'The first apple tree in Canada was cultivated by early French settlers in Nova Scotia’s Annapolis Valley around 1633.'),
+    (2, 1, 9, 'Apples belong to the rose family (Rosaceae), alongside pears, strawberries and peaches.'),
+    (3, 1, 10, 'There are more than 7,500 apple varieties worldwide!'),
+    (4, 1, 11, 'Kazakhstan is linked to the ancestry of modern domestic apples.The name of its largest city, Almaty, translates to "Father of Apples".'),
+    (5, 2, 12, 'Bananas are botanically classified as berries, but strawberries are not true botanical berries!'),
+    (6, 2, 13, 'The word “banana” comes from the Arabic word banan, meaning “finger.”'),
+    (7, 2, 14, 'There are more than 1,000 different varieties of bananas worldwide, divided into about 50 groups'),
+    (8, 2, 15, 'Once developed, instead of growing towards the ground, bananas turn towards the sun. The fruit continues growing against gravity, giving the banana its familiar curved shape.');

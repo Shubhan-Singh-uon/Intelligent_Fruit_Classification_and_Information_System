@@ -17,20 +17,24 @@ from pathlib import Path
 # Get the main project folder
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Path to the SQL schema file
+# Path to the SQL schema file and the SQL seed data file
 SCHEMA_PATH = BASE_DIR / "database" / "schema.sql"
-
+SEED_PATH = BASE_DIR / "database" / "seed_fruit.sql"
 # Path where the SQLite database will be created
 DATABASE_PATH = BASE_DIR / "database" / "fruit_classifier.db"
 # Read the database schema
 with open(SCHEMA_PATH, "r", encoding="utf-8") as file:
     schema_sql = file.read()
+# Read the seed data
+with open(SEED_PATH, "r", encoding="utf-8") as file:
+    seed_sql = file.read()
 # Connect to the SQLite database
 connection = sqlite3.connect(DATABASE_PATH)
 
 # Execute all SQL commands from schema.sql
 connection.executescript(schema_sql)
-
+# Insert the initial fruit information
+connection.executescript(seed_sql)
 # Save the changes and close the connection
 connection.commit()
 connection.close()
