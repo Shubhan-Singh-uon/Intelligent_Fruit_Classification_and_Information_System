@@ -37,7 +37,10 @@ INSERT INTO SOURCE (source_id, source_name, source_url, access_date) VALUES
     (12, 'Live Science-Why are bananas berries but strawberries aren''t?', 'https://www.livescience.com/57477-why-are-bananas-considered-berries.html', '2026-10-16'),
     (13, 'Michigan State Univeristy -Plant science at the dinner table: bananas', 'https://www.canr.msu.edu/news/plant-science-at-the-dinner-table-bananas', '2026-10-16'),
     (14, 'The Guardian', 'https://www.theguardian.com/commentisfree/2024/mar/22/1000-varieties-banana-lack-of-diversity-extinction', '2026-10-16'),
-    (15, 'Australian Bananas-Mind Bending Facts', 'https://www.australianbananas.com.au/pages/all-about-bananas/mind-bending-facts', '2026-10-16');
+    (15, 'Australian Bananas-Mind Bending Facts', 'https://www.australianbananas.com.au/pages/all-about-bananas/mind-bending-facts', '2026-10-16')
+    (16, 'University of Vermont Extension - All About Apples','https://www.uvm.edu/extension/news/all-about-apples', '2026-10-29'),
+    (17, 'Michigan State University Extension - Taste of the Tropics: Ten tropical fruits','https://msu-prod.dotcmscloud.com/news/taste-of-the-tropics-ten-tropical-fruits', '2026-10-29'),
+    (16, 'Harvard T.H. Chan School of Public Health - Vitamin B6','https://nutritionsource.hsph.harvard.edu/vitamin-b6/','2026-10-29');
 
 -- ============================================
 -- 3. NUTRITION
@@ -72,7 +75,9 @@ INSERT INTO HEALTH_BENEFIT (benefit_id, fruit_id, source_id, benefit_description
     (3, 1, 5, 'Research suggests apple consumption may have beneficial effects on some cardiovascular risk factors.'),
     (4, 2, 6, 'Bananas are rich in potassium, which supports normal heart function, muscle contraction, and healthy blood pressure.'),
     (5, 2, 7, 'Bananas provide carbohydrates that supply energy for physical activity, making them a convenient pre-workout snack.'),
-    (6, 2, 6, 'Unripe bananas contain resistant starch, which acts as a prebiotic and helps nourish beneficial gut bacteria.');
+    (6, 2, 6, 'Unripe bananas contain resistant starch, which acts as a prebiotic and helps nourish beneficial gut bacteria.'),
+    (7, 1, 5, 'Observational research has associated apple consumption with a lower risk of type 2 diabetes.'),
+    (8, 2, 16, 'Bananas provide vitamin B6, which supports enzyme reactions involved in protein, carbohydrate, and fat metabolism.');
 
 -- ============================================
 -- 6. FUN FACT
@@ -85,4 +90,8 @@ INSERT INTO FUN_FACT (fact_id, fruit_id, source_id, fact_text) VALUES
     (5, 2, 12, 'Bananas are botanically classified as berries, but strawberries are not true botanical berries!'),
     (6, 2, 13, 'The word “banana” comes from the Arabic word banan, meaning “finger.”'),
     (7, 2, 14, 'There are more than 1,000 different varieties of bananas worldwide, divided into about 50 groups'),
-    (8, 2, 15, 'Once developed, instead of growing towards the ground, bananas turn towards the sun. The fruit continues growing against gravity, giving the banana its familiar curved shape.');
+    (8, 2, 15, 'Once developed, instead of growing towards the ground, bananas turn towards the sun. The fruit continues growing against gravity, giving the banana its familiar curved shape.'),
+    (9, 1, 16, 'An apple is about 25% air, which helps explain why apples float in water.'),
+    (10, 1, 16, 'It takes about 40 apples to make one gallon of apple cider.'),
+    (11, 2, 17, 'The banana plant is actually a giant herb, not a tree.'),
+    (12, 2, 17, 'Cultivated bananas are seedless and are propagated through cloning.');
