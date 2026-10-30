@@ -37,7 +37,7 @@ INSERT INTO SOURCE (source_id, source_name, source_url, access_date) VALUES
     (12, 'Live Science-Why are bananas berries but strawberries aren''t?', 'https://www.livescience.com/57477-why-are-bananas-considered-berries.html', '2026-10-16'),
     (13, 'Michigan State Univeristy -Plant science at the dinner table: bananas', 'https://www.canr.msu.edu/news/plant-science-at-the-dinner-table-bananas', '2026-10-16'),
     (14, 'The Guardian', 'https://www.theguardian.com/commentisfree/2024/mar/22/1000-varieties-banana-lack-of-diversity-extinction', '2026-10-16'),
-    (15, 'Australian Bananas-Mind Bending Facts', 'https://www.australianbananas.com.au/pages/all-about-bananas/mind-bending-facts', '2026-10-16');
+    (15, 'Australian Bananas-Mind Bending Facts', 'https://www.australianbananas.com.au/pages/all-about-bananas/mind-bending-facts', '2026-10-16'),
     (16, 'City of Ryde - Granny Smith', 'https://www.ryde.nsw.gov.au/Library/Local-and-Family-History/Historic-Ryde/Historic-Figures/Granny-Smith', '2026-10-30'),
     (17, 'University of Vermont Extension - All About Apples', 'https://www.uvm.edu/extension/news/all-about-apples', '2026-10-30'),
     (18, 'Kew Gardens - Cavendish Banana', 'https://www.kew.org/plants/cavendish-banana', '2026-10-30'),
@@ -88,7 +88,7 @@ INSERT INTO FUN_FACT (fact_id, fruit_id, source_id, fact_text) VALUES
     (5, 2, 12, 'Bananas are botanically classified as berries, but strawberries are not true botanical berries!'),
     (6, 2, 13, 'The word “banana” comes from the Arabic word banan, meaning “finger.”'),
     (7, 2, 14, 'There are more than 1,000 different varieties of bananas worldwide, divided into about 50 groups'),
-    (8, 2, 15, 'Once developed, instead of growing towards the ground, bananas turn towards the sun. The fruit continues growing against gravity, giving the banana its familiar curved shape.');
+    (8, 2, 15, 'Once developed, instead of growing towards the ground, bananas turn towards the sun. The fruit continues growing against gravity, giving the banana its familiar curved shape.'),
     (9, 1, 16, 'The Granny Smith apple was discovered by Maria Ann Smith in 1868 in Eastwood, New South Wales, Australia.'),
     (10, 1, 17, 'Apple trees grown from seeds do not necessarily produce fruit identical to the parent apple tree. Commercial apple trees are therefore propagated through grafting.'),
     (11, 2, 18, 'Banana plants are giant herbs rather than trees. Their apparent trunks are called pseudostems and are formed from tightly packed leaf bases.'),
