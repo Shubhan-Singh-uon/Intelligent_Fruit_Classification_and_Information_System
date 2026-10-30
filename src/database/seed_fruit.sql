@@ -41,7 +41,12 @@ INSERT INTO SOURCE (source_id, source_name, source_url, access_date) VALUES
     (16, 'City of Ryde - Granny Smith', 'https://www.ryde.nsw.gov.au/Library/Local-and-Family-History/Historic-Ryde/Historic-Figures/Granny-Smith', '2026-10-30'),
     (17, 'University of Vermont Extension - All About Apples', 'https://www.uvm.edu/extension/news/all-about-apples', '2026-10-30'),
     (18, 'Kew Gardens - Cavendish Banana', 'https://www.kew.org/plants/cavendish-banana', '2026-10-30'),
-    (19, 'San Diego Zoo - Banana', 'https://animals.sandiegozoo.org/plants/banana', '2026-10-30');
+    (19, 'San Diego Zoo - Banana', 'https://animals.sandiegozoo.org/plants/banana', '2026-10-30'),
+    (20, 'University of Saskatchewan - Apple Pollination', 'https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/fruit/apples.php', '2026-10-30'),
+    (21, 'USDA - Apple Nutrition and Fun Facts', 'https://www.govinfo.gov/content/pkg/GOVPUB-A98-PURL-gpo87472/pdf/GOVPUB-A98-PURL-gpo87472.pdf', '2026-10-30'),
+    (22, 'Texas A&M AgriLife Extension - Banana', 'https://aggie-horticulture.tamu.edu/fruit-nut/fact-sheets/banana/', '2026-10-30'),
+    (23, 'New York Botanical Garden - Banana', 'https://www.nybg.org/around-the-table/banana/', '2026-10-30');
+
 -- ============================================
 -- 3. NUTRITION
 -- ============================================
@@ -92,4 +97,8 @@ INSERT INTO FUN_FACT (fact_id, fruit_id, source_id, fact_text) VALUES
     (9, 1, 16, 'The Granny Smith apple was discovered by Maria Ann Smith in 1868 in Eastwood, New South Wales, Australia.'),
     (10, 1, 17, 'Apple trees grown from seeds do not necessarily produce fruit identical to the parent apple tree. Commercial apple trees are therefore propagated through grafting.'),
     (11, 2, 18, 'Banana plants are giant herbs rather than trees. Their apparent trunks are called pseudostems and are formed from tightly packed leaf bases.'),
-    (12, 2, 19, 'A banana plant generally produces around 40 leaves before reaching the fruiting stage.');
+    (12, 2, 19, 'A banana plant generally produces around 40 leaves before reaching the fruiting stage.'),
+    (13, 1, 20, 'Apple trees generally require pollen from another apple or crabapple variety to produce fruit successfully.'),
+    (14, 1, 21, 'An apple has five seed chambers, also called carpels, located near its core.'),
+    (15, 2, 22, 'Banana flowers grow in groups called hands along the flower stalk, and the female flowers develop into bananas.'),
+    (16, 2, 23, 'Many wild bananas contain large, hard seeds, unlike the familiar cultivated bananas that are usually seedless.');
