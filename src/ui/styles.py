@@ -19,14 +19,55 @@ CSS = """
 <style>
 section[data-testid="stSidebar"] { background: #17483a; }
 section[data-testid="stSidebar"] * { color: #e6f2ed; }
+
 [data-testid="stSidebarNav"]::before {
-    content: "FruitAI"; display: block; font-size: 1.35rem; font-weight: 700;
-    padding: 1.1rem 1rem 0.6rem 1rem; color: #ffffff;
+    content: "Intelligent Fruit Classification"; 
+    display: block; 
+    font-size: 1.2rem; 
+    font-weight: 700;
+    line-height: 1.3;
+    padding: 1.5rem 1rem 1rem 1rem; 
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Adds a nice divider line */
+    margin-bottom: 1rem;
 }
-.block-container { max-width: 1100px; padding-top: 4.5rem; }
+
+[data-testid="stSidebarNav"] li {
+    margin-bottom: 0.5rem;
+}
+
+/* --- MAIN CONTENT --- */
+.block-container { max-width: 1100px; padding-top: 3rem; }
 
 .fa-title { font-size: 1.9rem; font-weight: 700; margin: 0 0 .2rem 0; color: #173f33; }
 .fa-sub   { color: #5b6b66; margin: 0 0 1.2rem 0; }
+
+
+/* The Start Classifying button  */
+div[data-testid="stButton"] > button[kind="primary"] {
+    background-color: #17483a !important; /* Matches sidebar green */
+    color: white !important;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.6rem 2rem;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.2s ease-in-out;
+    max-width: 300px; 
+    margin: 0 auto;
+}
+
+div[data-testid="stButton"] > button[kind="primary"]:hover {
+    background-color: #226a56 !important; /* Slightly lighter green on hover */
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+div[data-testid="stButton"] {
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+}
 
 .fa-card { border: 1px solid #d9e6e0; border-radius: 12px; padding: 1rem 1.2rem; background: #ffffff; }
 .fa-step { text-align: center; min-height: 9.5rem; }
@@ -79,6 +120,7 @@ section[data-testid="stSidebar"] * { color: #e6f2ed; }
 .fa-src a, .fa-list a { color: #1d6e52; }
 </style>
 """
+
 
 
 def esc(value) -> str:
@@ -138,3 +180,4 @@ def bullet_list(items_html) -> str:
 
 def chips(texts) -> str:
     return "".join(f'<span class="fa-chip">{esc(text)}</span>' for text in texts)
+

@@ -20,8 +20,7 @@ from src.ui.history_page import render_history
 from src.ui.home_page import render_home
 from src.ui.styles import inject_styles
 
-st.set_page_config(page_title="Intelligent Fruit Classification and Information System", 
-                   page_icon="🍎", layout="wide")
+st.set_page_config(page_title="Intelligent Fruit Classification and Information System", layout="wide")
 
 
 @st.cache_resource(show_spinner="Loading the Classification Model...")
