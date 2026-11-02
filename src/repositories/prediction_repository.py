@@ -26,6 +26,7 @@ def save_prediction(fruit_id,
 # This includes accepted, rejected, and invalid-input predictions.
 # Nullable fields allow rejected or invalid predictions to be recorded
 # even when no fruit class or probability values are available.
+# created_at is not listed here: SQLite fills it in automatically.
     connection = get_connection()
     cursor = connection.cursor()
     cursor.execute(
@@ -54,12 +55,11 @@ def save_prediction(fruit_id,
     connection.close()
 
 def get_prediction_history():
-# Retrieve all stored prediction attempts from PREDICTION_HISTORY.
+# Retrieve all stored prediction attempts from PREDICTION_HISTORY, newest first.
 # This allows the application to access previously recorded prediction results
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("""SELECT * FROM PREDICTION_HISTORY""")
+    cursor.execute("""SELECT * FROM PREDICTION_HISTORY ORDER BY prediction_id DESC""")
     prediction_history=cursor.fetchall()
     connection.close()
-    return prediction_history
-    
+    return prediction_history  

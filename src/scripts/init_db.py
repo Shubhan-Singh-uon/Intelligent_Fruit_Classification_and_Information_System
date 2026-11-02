@@ -10,10 +10,14 @@ Responsible Pillar: Pillar 3 - Database & Information System
 Maintainers: Abeeha Mariam
 
 Usage:
-    python src/scripts/init_db.py
+    python src/scripts/init_db.py            create the database (does nothing if it already exists)
+    python src/scripts/init_db.py --reset    delete the database and rebuild it from schema.sql and
+                                             seed_fruit.sql (this ERASES the prediction history)
 """
+import argparse
 import sqlite3
 from pathlib import Path
+
 # Define the src directory as the base location for database files.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,6 +27,25 @@ SEED_PATH = BASE_DIR / "database" / "seed_fruit.sql"
 
 # Path where the SQLite database will be created
 DATABASE_PATH = BASE_DIR / "database" / "fruit_classifier.db"
+
+parser = argparse.ArgumentParser(description="Create the local SQLite database.")
+parser.add_argument(
+    "--reset",
+    action="store_true",
+    help="delete an existing database first and rebuild it (erases the prediction history)",
+)
+args = parser.parse_args()
+
+# The seed file uses plain INSERT statements, so running it twice on the same database fails with a
+# primary-key error. Instead of failing, stop with a clear message unless the user asked for a reset.
+if DATABASE_PATH.exists():
+    if not args.reset:
+        print(f"Database already exists: {DATABASE_PATH}")
+        print("Nothing was changed. To rebuild it from scratch (erasing the prediction history), run:")
+        print("    python src/scripts/init_db.py --reset")
+        raise SystemExit(0)
+    DATABASE_PATH.unlink()
+    print("Existing database deleted.")
 
 # Read the database schema
 with open(SCHEMA_PATH, "r", encoding="utf-8") as file:
