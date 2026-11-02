@@ -26,10 +26,10 @@ class PredictionStatus(str, Enum):
     exceptions (see exceptions.py).
     """
 
-    ACCEPTED = "Accepted"            # A
-    NEEDS_REVIEW = "Needs Review"    # B
-    REJECTED = "Rejected"            # C
-    INVALID_INPUT = "Invalid Input"  # D
+    ACCEPTED = "accepted"            # A
+    NEEDS_REVIEW = "needs_review"    # B
+    REJECTED = "rejected"            # C
+    INVALID_INPUT = "invalid_input"  # D
 
 
 @dataclass(frozen=True)

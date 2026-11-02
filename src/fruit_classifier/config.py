@@ -62,4 +62,4 @@ DISTANCE_REJECT_THRESHOLD = 61.69
 # Prediction history
 # --------------------------------------------------------------------------- 
 # Which outcomes are written to PREDICTION_HISTORY. 
-SAVE_TO_HISTORY_STATUSES = ("Accepted", "Needs_Review", "Rejected", "Invalid_Input")
+SAVE_TO_HISTORY_STATUSES = ("accepted", "needs_review", "rejected", "invalid_input")

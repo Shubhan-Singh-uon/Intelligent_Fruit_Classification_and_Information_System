@@ -105,5 +105,6 @@ CREATE TABLE IF NOT EXISTS PREDICTION_HISTORY (
     prediction_status TEXT NOT NULL,
     rejection_reason TEXT NULL,
     model_version TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (fruit_id) REFERENCES FRUIT(fruit_id)
 );

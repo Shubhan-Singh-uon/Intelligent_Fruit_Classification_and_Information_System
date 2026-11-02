@@ -11,6 +11,8 @@ Maintainers: Project Team
 
 Note:
     Exception definitions must remain consistent across all pillars.
+    DatabaseUnavailableError was added by the service layer so database
+    failures can be reported consistently.
 """
 
 class FruitClassifierError(Exception):
