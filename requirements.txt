@@ -5,9 +5,14 @@
 # Author: Group 8
 # Responsible Area: Shared/Core
 
-streamlit
+streamlit>=1.37   # st.navigation and Material icons are needed
 scikit-learn
 pandas
 numpy
 pytest
 python-dotenv
+
+# Added for ML inference (the selected model M4_PC1 is PyTorch)
+torch
+torchvision
+pillow
