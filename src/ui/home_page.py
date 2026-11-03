@@ -9,11 +9,14 @@ Author: Hasnain Younas
 Responsible Pillar: Pillar 4 - Application & System Integration
 Maintainers: Group 8
 """
-import streamlit as st
 import base64
 from pathlib import Path
+from functools import lru_cache
 
-from src.ui.styles import html
+import streamlit as st
+
+from src.fruit_classifier.config import ASSETS_DIR
+from src.ui.styles import esc, html
 
 # Helper function to convert local images to Base64 with correct MIME type
 def get_image_data_uri(img_path):

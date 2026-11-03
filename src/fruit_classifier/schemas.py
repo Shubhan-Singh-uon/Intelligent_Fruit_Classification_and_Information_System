@@ -6,7 +6,7 @@ Description:
     to exchange prediction results and related information between
     preprocessing, ML inference, services, repositories, and the UI.
 
-Author(s): Group 8
+Author: Group 8
 Responsible Area: Shared/Core
 Maintainers: Group 8
 
@@ -71,10 +71,10 @@ class PredictionResult:
     banana_probability: Optional[float] = None
     confidence: Optional[float] = None
     reason_code: Optional[str] = None
-    # Diagnostics only (no database column). Useful for threshold tuning and an "advanced" UI view.
+    # Diagnostics only. Useful for threshold tuning.
     feature_distance: Optional[float] = None
     tta_consistent: Optional[bool] = None
-    # Filled in by the service layer after the FRUIT lookup (use dataclasses.replace).
+    # Filled in by the service layer after the FRUIT lookup.
     fruit_id: Optional[int] = None
 
     @property
@@ -85,7 +85,7 @@ class PredictionResult:
     @property
     def should_show_fruit_info(self) -> bool:
         """Fruit information is shown for accepted predictions only."""
-        return self.status is PredictionStatus.ACCEPTED
+        return self.status == PredictionStatus.ACCEPTED   # equality, not identity: see ui/classify_page.py
 
 
 @dataclass(frozen=True)
@@ -109,14 +109,13 @@ class FruitInformation:
 class ClassificationResponse:
     """What PredictionService.classify() hands to the UI.
 
-    `prediction` is the outcome. 
-    `issues` lists technical problems that did NOT stop the prediction from being shown, as codes 
-    defined in services/prediction_service.py (for example "history_not_saved"); the UI turns 
-    them into messages. Technical failures that do stop classification are raised as exceptions instead 
-    (see exceptions.py).
+    `prediction` is the outcome (A to D). `issues` lists technical problems that did NOT stop the
+    prediction from being shown, as codes defined in services/prediction_service.py
+    (for example "history_not_saved"); the UI turns them into messages. Technical failures that
+    do stop classification are raised as exceptions instead (see exceptions.py).
     """
 
     prediction: PredictionResult
     fruit_info: Optional[FruitInformation] = None   # accepted predictions only
-    history_saved: bool = False                     # false with no issue code 
+    history_saved: bool = False                      # False with no issue code = not attempted by policy
     issues: Tuple[str, ...] = ()

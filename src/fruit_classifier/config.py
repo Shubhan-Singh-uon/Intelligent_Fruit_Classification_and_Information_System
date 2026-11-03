@@ -21,6 +21,7 @@ from pathlib import Path
 # This file lives at <root>/src/fruit_classifier/config.py, so the root is two levels up.
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+ASSETS_DIR = PROJECT_ROOT / "assets"   # pictures used by the UI, e.g. the Home page header
 
 # Files in artifacts/ (see artifacts/README.md):
 #   M4_PC1.pt                  trained weights (state_dict) from results/checkpoints/
@@ -41,8 +42,11 @@ IMAGE_SIZE = (128, 128)
 PREPROCESSING_VERSION = "PP_v1: EXIF-upright, RGB, bicubic resize 128x128, pixels 0-1"
 
 # Upload validation 
-ALLOWED_IMAGE_FORMATS = ("JPEG", "PNG")   # Pillow format names
+ALLOWED_IMAGE_FORMATS = ("JPEG", "MPO", "PNG", "WEBP", "BMP", "GIF", "TIFF", "HEIF")
+UPLOAD_EXTENSIONS = ("jpg", "jpeg", "jpe", "jfif", "png", "webp", "bmp", "gif", "tif", "tiff", "heic", "heif")
+SUPPORTED_FORMATS_LABEL = "JPG, PNG, WEBP, BMP, GIF, TIFF, HEIC"   # shown to the user
 MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+
 
 # --------------------------------------------------------------------------- 
 # Prediction policy thresholds

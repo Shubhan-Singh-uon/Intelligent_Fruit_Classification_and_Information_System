@@ -9,13 +9,14 @@ Author: Hasnain Younas
 Responsible Pillar: Pillar 4 - Application & System Integration
 Maintainers: Group 8
 """
+import logging
 from datetime import datetime, timezone
-
 import streamlit as st
-
 from src.fruit_classifier.exceptions import DatabaseUnavailableError
 from src.ui import messages
 from src.ui.styles import esc, html, percent, pill, tile
+
+logger = logging.getLogger(__name__)
 
 PAGE_SIZE = 10
 _PAGE_KEY = "history_page_number"
@@ -68,7 +69,8 @@ def render_history(service) -> None:
 
     try:
         records = service.get_history()
-    except DatabaseUnavailableError:
+    except Exception:   # DatabaseUnavailableError or anything else; caught broadly because class identity can
+        logger.exception("Could not read prediction history")   # change when Streamlit reloads modules
         st.error(
             "The prediction history could not be read from the database. "
             "If this is a new installation, create it first with: python src/scripts/init_db.py"

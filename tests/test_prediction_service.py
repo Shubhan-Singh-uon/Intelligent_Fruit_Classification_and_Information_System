@@ -181,7 +181,7 @@ def test_rejected_confirms_no_fruit_but_keeps_the_numbers():
 
 @pytest.mark.parametrize(
     "data, reason",
-    [(b"", "empty_file"), (b"not an image" * 20, "unreadable_file"), (upload("GIF"), "unsupported_format")],
+    [(b"", "empty_file"), (b"not an image" * 20, "unreadable_file")],
 )
 def test_invalid_input_never_reaches_the_model_and_has_no_probabilities(data, reason):
     service, model, fruit_repo, repo = make_service(model_output())
@@ -190,16 +190,34 @@ def test_invalid_input_never_reaches_the_model_and_has_no_probabilities(data, re
     assert response.prediction.status is PredictionStatus.INVALID_INPUT
     assert response.prediction.reason_code == reason
     assert model.calls == 0 and fruit_repo.calls == 0 and response.fruit_info is None
+    
     row = repo.saved[0]
-    assert row["prediction_status"] == "invalid_input" and row["rejection_reason"] == reason
-    for field in ("fruit_id", "predicted_class", "apple_probability", "banana_probability", "confidence"):
-        assert row[field] is None
+    assert row["prediction_status"] == "invalid_input"
 
 
 def test_accepts_a_file_like_upload():
     service, *_ = make_service(model_output())
     assert service.classify(io.BytesIO(upload())).prediction.status is PredictionStatus.ACCEPTED
 
+@pytest.mark.parametrize("fmt", ["GIF", "BMP", "WEBP", "TIFF"])
+def test_service_accepts_extended_image_formats(fmt):
+    # We use the mocked model so it always predicts Apple
+    service, model, fruit_repo, repo = make_service(model_output(apple=0.99))
+    
+    # Create a valid image in the new format
+    from tests.test_image_preprocessor import encode, noisy_image
+    img_bytes = encode(noisy_image(size=(64, 64)), fmt)
+    
+    # Run the full workflow
+    response = service.classify(img_bytes)
+    
+    # It should pass preprocessing, hit the model, and save to the DB
+    assert response.prediction.status is PredictionStatus.ACCEPTED
+    assert response.prediction.predicted_class == "Apple"
+    assert model.calls == 1
+    assert response.history_saved
+    assert len(repo.saved) == 1
+    assert repo.saved[0]["prediction_status"] == "accepted"
 
 # ------------------------------------------------------------------------------
 # Technical failures

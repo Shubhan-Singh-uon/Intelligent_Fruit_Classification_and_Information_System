@@ -101,12 +101,12 @@ class PredictionService:
         try:
             image = preprocess_image(upload)
         except InvalidImageError as error:
-            # Outcome D: no inference runs, so there are no probabilities.
+            # Outcome D: no inference runs - no probabilities.
             return invalid_input_result(error.reason_code, model_version)
 
         try:
             output = self._model.predict(image)
-        except Exception as error:   # any model failure is technical, not an outcome
+        except Exception as error:   # any model failure is technical
             logger.exception("Model inference failed")
             raise InferenceError("The model failed while classifying the image.") from error
 
@@ -230,13 +230,13 @@ def _collect_sources(nutrition, health_benefits, fun_facts):
     return tuple(sources)
 
 
-def build_prediction_service(**kwargs) -> PredictionService:
+#def build_prediction_service(**kwargs) -> PredictionService:
     """Load the trained model and return a ready service.
 
     Raises ModelUnavailableError if the model files are missing or inconsistent, so the app
     can show a clear technical error on start-up instead of failing on the first upload.
     The import is local so that the rest of this module (and its tests) work without torch.
     """
-    from src.ml.model_service import load_model_service
+#    from src.ml.model_service import load_model_service
 
-    return PredictionService(load_model_service(), **kwargs)
+#    return PredictionService(load_model_service(), **kwargs)

@@ -19,7 +19,7 @@ import logging
 import streamlit as st
 from PIL import Image, ImageOps
 
-from src.fruit_classifier.config import DISTANCE_REJECT_THRESHOLD
+from src.fruit_classifier.config import DISTANCE_REJECT_THRESHOLD, SUPPORTED_FORMATS_LABEL, UPLOAD_EXTENSIONS
 from src.fruit_classifier.schemas import ClassificationResponse, FruitInformation, PredictionStatus
 from src.ui import messages
 from src.ui.styles import banner, bullet_list, chips, esc, html, link, percent, pill, probability_bars
@@ -42,7 +42,6 @@ _UPLOADER_KEY = "classify_uploader_key"   # Gives the user a fresh, empty state
 _RESPONSE = "classify_response"
 _RESPONSE_FOR = "classify_response_for"
 
-
 # -------------------------------------------------------------------------------------
 # Helper Functions
 # -------------------------------------------------------------------------------------
@@ -54,7 +53,7 @@ def _upload_id(uploaded):
 
 
 def _preview_image(data: bytes):
-    """A display copy of the upload, or None if it cannot be decoded (the service reports that properly)."""
+    """A display copy of the upload, or None if it cannot be decoded."""
     try:
         image = ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert("RGB")
         image.thumbnail((640, 640))
@@ -68,7 +67,6 @@ def _reset() -> None:
     st.session_state.pop(_RESPONSE, None)
     st.session_state.pop(_RESPONSE_FOR, None)
 
-
 # -------------------------------------------------------------------------------------
 # Page
 # -------------------------------------------------------------------------------------
@@ -79,15 +77,15 @@ def render_classify(service) -> None:
 
     uploaded = st.file_uploader(
         "Upload an image of an apple or banana",
-        type=["jpg", "jpeg", "png"],
+        type=list(UPLOAD_EXTENSIONS),
         key=f"uploader_{st.session_state.get(_UPLOADER_KEY, 0)}",
         label_visibility="collapsed",
     )
-    st.caption(f"Supported formats: JPG, PNG, JPEG  |  Max file size: {messages.MAX_MB} MB")
+    st.caption(f"Supported formats: {SUPPORTED_FORMATS_LABEL}  |  Max file size: {messages.MAX_MB} MB")
 
     upload_id = _upload_id(uploaded)
     if st.session_state.get(_RESPONSE_FOR) != upload_id:
-        st.session_state.pop(_RESPONSE, None)   # a different (or removed) file = drop the old result
+        st.session_state.pop(_RESPONSE, None)   # a different or removed file = drop the old result
         st.session_state.pop(_RESPONSE_FOR, None)
 
     preview = None
@@ -114,20 +112,20 @@ def render_classify(service) -> None:
         _render_response(response)
         st.button("Try Another Image", on_click=_reset, key="try_another")
 
-
 # -------------------------------------------------------------------------------------
 # Outcomes
 # -------------------------------------------------------------------------------------
 def _render_response(response: ClassificationResponse) -> None:
-    status = response.prediction.status
-    if status is PredictionStatus.ACCEPTED:
-        _render_accepted(response)
-    elif status is PredictionStatus.NEEDS_REVIEW:
-        _render_needs_review(response)
-    elif status is PredictionStatus.REJECTED:
-        _render_rejected(response)
-    else:
-        _render_invalid(response)
+    # Dispatch on the status VALUE, Streamlit re-imports every project module whenever a 
+    # source file changes, which creates a second copy of PredictionStatus
+    status = getattr(response.prediction.status, "value", response.prediction.status)
+    renderer = _RENDERERS.get(status)
+    if renderer is None:
+        # Never fall through to "invalid" - would silently mislabel a good result
+        logger.error("Unrecognised Prediction Status %r", status)
+        st.error(f"The result could not be displayed (Unrecognised Status: {status!r}).")
+        return
+    renderer(response)
 
 
 def _render_issues(response: ClassificationResponse) -> None:
@@ -174,7 +172,7 @@ def _render_rejected(response: ClassificationResponse) -> None:
         st.write(messages.REJECTED_DETAIL)
         # Shown for reference only. The app does not confirm a fruit for a rejected image, so the
         # class probabilities stay out of the main view.
-        with st.expander("Technical Details (for reference)"):
+        with st.expander("Technical Details (for Reference)"):
             html(probability_bars(prediction.apple_probability, prediction.banana_probability))
             st.caption(
                 f"Distance from known apple/banana images: {prediction.feature_distance:.1f} "
@@ -189,7 +187,7 @@ def _render_invalid(response: ClassificationResponse) -> None:
     with st.container(border=True):
         html(f'<span class="fa-result-name">Invalid Image</span>{pill("Invalid Input", "bad")}')
         st.write(messages.INVALID_DETAIL.get(prediction.reason_code, messages.INVALID_FALLBACK))
-    _render_issues(response)   # no probabilities: the model never ran
+    _render_issues(response)   # no probabilities - the model never ran
 
 
 # -------------------------------------------------------------------------------------
@@ -246,3 +244,10 @@ def _render_fruit_information(info: FruitInformation) -> None:
             )
         else:
             st.write("No Sources are Listed.")
+
+_RENDERERS = {
+    PredictionStatus.ACCEPTED.value: _render_accepted,
+    PredictionStatus.NEEDS_REVIEW.value: _render_needs_review,
+    PredictionStatus.REJECTED.value: _render_rejected,
+    PredictionStatus.INVALID_INPUT.value: _render_invalid,
+}

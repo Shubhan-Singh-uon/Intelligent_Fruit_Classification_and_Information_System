@@ -14,7 +14,8 @@ Contributors: Group 8
 import streamlit as st
 
 from src.fruit_classifier.exceptions import ModelUnavailableError
-from src.services.prediction_service import build_prediction_service
+from src.ml.model_service import load_model_service
+from src.services.prediction_service import PredictionService
 from src.ui.classify_page import render_classify
 from src.ui.history_page import render_history
 from src.ui.home_page import render_home
@@ -24,22 +25,23 @@ st.set_page_config(page_title="Intelligent Fruit Classification and Information 
 
 
 @st.cache_resource(show_spinner="Loading the Classification Model...")
-def get_service():
-    """Load the model once per server process, not on every Streamlit rerun."""
-    return build_prediction_service()
-
+def get_model_service():
+    """Load the trained network once per server process, not on every Streamlit rerun."""
+    return load_model_service()
 
 inject_styles()
 
 try:
-    service = get_service()
+    model_service = get_model_service()
 except ModelUnavailableError as error:
-    # A technical failure, not a prediction outcome: nothing works without the model, so stop here.
+    # A technical failure, not a prediction outcome
     st.error("The classification model could not be loaded, so the application cannot start.")
     st.write(str(error))
     st.caption("Check that the files listed in artifacts/README.md are in the artifacts folder.")
     st.stop()
 
+# Built on every run so it always matches the currently loaded code.
+service = PredictionService(model_service)
 
 def home() -> None:
     render_home(on_start=lambda: st.switch_page(classify_page))

@@ -174,7 +174,7 @@ def test_rejected_confirms_no_fruit_and_keeps_probabilities_out_of_the_main_view
     assert messages.REJECTED_BANNER in text and messages.REJECTED_DETAIL in text
     assert "Unsupported Image" in text and "Rejected" in text
     assert "Fruit Information" not in text and "Confidence" not in text
-    assert expander_labels(at) == ["Technical Details (for reference)"]
+    assert expander_labels(at) == ["Technical Details (for Reference)"]
 
 
 # -------------------------------------------------------------------------------------
