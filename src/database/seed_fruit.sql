@@ -45,8 +45,9 @@ INSERT INTO SOURCE (source_id, source_name, source_url, access_date) VALUES
     (20, 'University of Saskatchewan - Apple Pollination', 'https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/fruit/apples.php', '2026-10-30'),
     (21, 'USDA - Apple Nutrition and Fun Facts', 'https://www.govinfo.gov/content/pkg/GOVPUB-A98-PURL-gpo87472/pdf/GOVPUB-A98-PURL-gpo87472.pdf', '2026-10-30'),
     (22, 'Texas A&M AgriLife Extension - Banana', 'https://aggie-horticulture.tamu.edu/fruit-nut/fact-sheets/banana/', '2026-10-30'),
-    (23, 'New York Botanical Garden - Banana', 'https://www.nybg.org/around-the-table/banana/', '2026-10-30');
-
+    (23, 'New York Botanical Garden - Banana', 'https://www.nybg.org/around-the-table/banana/', '2026-10-30'),
+    (24, 'Michigan State University Extension - Taste of the Tropics: Ten tropical fruits', 'https://msu-prod.dotcmscloud.com/news/taste-of-the-tropics-ten-tropical-fruits', '2026-10-29'),
+    (25, 'Harvard T.H. Chan School of Public Health - Vitamin B6', 'https://nutritionsource.hsph.harvard.edu/vitamin-b6/', '2026-10-29');    
 -- ============================================
 -- 3. NUTRITION
 -- ============================================
@@ -80,7 +81,10 @@ INSERT INTO HEALTH_BENEFIT (benefit_id, fruit_id, source_id, benefit_description
     (3, 1, 5, 'Research suggests apple consumption may have beneficial effects on some cardiovascular risk factors.'),
     (4, 2, 6, 'Bananas are rich in potassium, which supports normal heart function, muscle contraction, and healthy blood pressure.'),
     (5, 2, 7, 'Bananas provide carbohydrates that supply energy for physical activity, making them a convenient pre-workout snack.'),
-    (6, 2, 6, 'Unripe bananas contain resistant starch, which acts as a prebiotic and helps nourish beneficial gut bacteria.');
+    (6, 2, 6, 'Unripe bananas contain resistant starch, which acts as a prebiotic and helps nourish beneficial gut bacteria.'),
+    (7, 1, 5, 'Observational research has associated apple consumption with a lower risk of type 2 diabetes.'),
+    (8, 2, 25, 'Bananas provide vitamin B6, which supports enzyme reactions involved in protein, carbohydrate, and fat metabolism.');
+    
 
 -- ============================================
 -- 6. FUN FACT
@@ -101,4 +105,7 @@ INSERT INTO FUN_FACT (fact_id, fruit_id, source_id, fact_text) VALUES
     (13, 1, 20, 'Apple trees generally require pollen from another apple or crabapple variety to produce fruit successfully.'),
     (14, 1, 21, 'An apple has five seed chambers, also called carpels, located near its core.'),
     (15, 2, 22, 'Banana flowers grow in groups called hands along the flower stalk, and the female flowers develop into bananas.'),
-    (16, 2, 23, 'Many wild bananas contain large, hard seeds, unlike the familiar cultivated bananas that are usually seedless.');
+    (16, 2, 23, 'Many wild bananas contain large, hard seeds, unlike the familiar cultivated bananas that are usually seedless.'),
+    (17, 1, 17, 'An apple is about 25% air, which helps explain why apples float in water.'),
+    (18, 1, 17, 'It takes about 40 apples to make one gallon of apple cider.'),
+    (19, 2, 24, 'Cultivated bananas are seedless and are propagated through cloning.');
