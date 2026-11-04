@@ -165,7 +165,7 @@ def history_page():
     for item in history:
         rows.append({
             "ID": item["prediction_id"],
-            "Date": item["created_at"],
+            "Date": item.get("created_at") or "-",
             "Status": item["prediction_status"],
             "Fruit": item["predicted_class"] or "-",
             "Apple": percent(item["apple_probability"]),

@@ -189,3 +189,18 @@ def test_group_history_page_get_newest_first_and_tiles(tmp_path, monkeypatch):
     history = service.get_history()
     assert history[0]["prediction_status"] == PredictionStatus.INVALID_INPUT.value
     assert PredictionService.summarise_history(history) == {"total": 2, "accepted": 1, "needs_review": 0, "rejected_or_invalid": 1}
+
+
+def test_history_page_work_with_old_databse(tmp_path, monkeypatch):
+    path = tmp_path / "old.db"
+    old_schema = (DB_FOLDER / "schema.sql").read_text(encoding="utf-8").replace("created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,", "")
+    connection = sqlite3.connect(path)
+    connection.executescript(old_schema)
+    connection.executescript((DB_FOLDER / "seed_fruit.sql").read_text(encoding="utf-8"))
+    connection.close()
+    monkeypatch.setattr(database, "DATABASE_PATH", path)
+    PredictionService(FakeModel(model_output(0.99))).classify(make_photo())
+    app = AppTest.from_string(APP_CODE, default_timeout=60).run()
+    app.sidebar.radio[0].set_value("Prediction History").run()
+    assert len(app.exception) == 0
+    assert len(app.dataframe) == 1

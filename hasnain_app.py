@@ -2,7 +2,7 @@
 File: hasnain_app.py
 Project: Intelligent Fruit Classification and Information System
 Description:
-    starts the hasnain version of the app. app.py is not changed
+    starts the hasnain version of the pages. app.py use the hasnain prediction service
 
 Author: Hasnain Younas
 Responsible Pillar: Pillar 4 - Application & System Integration

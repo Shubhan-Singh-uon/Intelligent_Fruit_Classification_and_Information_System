@@ -116,7 +116,7 @@ class PredictionService:
         )
 
     def save_history(self, result, issues):
-        # config have names like Needs_Review but the status value is Needs Review
+        # old status names had a space so it is change to _ before the check
         status_name = result.status.value.replace(" ", "_")
         if status_name not in self.save_statuses:
             return False
