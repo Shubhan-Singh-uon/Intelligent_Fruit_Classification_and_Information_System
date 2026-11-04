@@ -15,7 +15,7 @@ import streamlit as st
 
 from src.fruit_classifier.exceptions import ModelUnavailableError
 from src.ml.model_service import load_model_service
-from src.services.prediction_service import PredictionService
+from hasnain.prediction_service import PredictionService
 from src.ui.classify_page import render_classify
 from src.ui.history_page import render_history
 from src.ui.home_page import render_home

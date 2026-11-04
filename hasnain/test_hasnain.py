@@ -105,7 +105,7 @@ def test_no_databse_still_give_result(tmp_path, monkeypatch):
     response = PredictionService(FakeModel(model_output(0.99))).classify(make_photo())
     assert response.prediction.status == PredictionStatus.ACCEPTED
     assert "history_not_saved" in response.issues
-    assert "fruit_info_missing" in response.issues
+    assert "fruit_info_unavailable" in response.issues
 
 
 def test_photo_change_when_turn_need_review(tmp_path, monkeypatch):
@@ -179,3 +179,13 @@ def test_history_page_without_databse(tmp_path, monkeypatch):
     app.sidebar.radio[0].set_value("Prediction History").run()
     assert len(app.exception) == 0
     assert "can not be load" in app.error[0].value
+
+
+def test_group_history_page_get_newest_first_and_tiles(tmp_path, monkeypatch):
+    make_test_db(tmp_path, monkeypatch)
+    service = PredictionService(FakeModel(model_output(0.99)))
+    service.classify(make_photo())
+    service.classify(b"this is not a image")
+    history = service.get_history()
+    assert history[0]["prediction_status"] == PredictionStatus.INVALID_INPUT.value
+    assert PredictionService.summarise_history(history) == {"total": 2, "accepted": 1, "needs_review": 0, "rejected_or_invalid": 1}
