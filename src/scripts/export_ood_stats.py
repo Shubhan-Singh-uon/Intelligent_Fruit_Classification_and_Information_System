@@ -16,13 +16,19 @@ Description:
 Author: Shubhan Singh
 Responsible Pillar: Pillar 2 - Machine Learning & Evaluation
 
----------------------------------------------------------------------------------------------
-Inputs come from the ML notebook's own outputs (Sections 16 and 18). Only the
+Usage (run from the project root):
+    python src/scripts/export_ood_stats.py --embeddings artifacts/M4_PC1_embeddings.npz --ood-csv artifacts/ood_examples_results_PC1.csv --checkpoint artifacts/M4_PC1.pt
+
+--checkpoint is optional but recommended: with the classifier head it also reports how genuine and
+unsupported images would be split into Accepted / Needs review / Rejected, for the thresholds
+currently in config.py and for a small grid of alternatives. The confidence gate matters as much
+as the distance gate, so tune them together.
+
+Inputs come from the training notebook's own outputs (Sections 16 and 18). Only the
 embeddings file is required; --ood-csv adds the false-acceptance columns.
 No images, dataset or checkpoint are needed. The statistics are rebuilt exactly as in
-notebook Section 16: class centroids from the training features, one shared Ledoit-Wolf 
-covariance of the centred features, pseudo-inverse.
----------------------------------------------------------------------------------------------
+notebook Section 16: class centroids from the training features, one shared
+Ledoit-Wolf covariance of the centred features, pseudo-inverse.
 """
 import argparse
 import sys
@@ -30,9 +36,10 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch  # only needed for this optional report
 from sklearn.covariance import LedoitWolf
 
-# Allow `python src/scripts/export_ood_stats.py` from the project root (same usage as init_db.py).
+# Allow `python src/scripts/export_ood_stats.py` from the project root.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from src.fruit_classifier.config import (  # noqa: E402
@@ -60,6 +67,46 @@ def build_stats(train_f, train_y):
 def retention_cutoff(test_dist, target=RETENTION_TARGET):
     """Smallest observed distance such that at least `target` of the genuine test images are <= it."""
     return float(np.quantile(test_dist, target, method="inverted_cdf"))
+
+
+def head_confidence(features, weight, bias):
+    """Highest class probability for each feature vector, from the 2-class linear head."""
+    logits = features @ weight.T + bias
+    logits = logits - logits.max(axis=1, keepdims=True)
+    probs = np.exp(logits)
+    probs /= probs.sum(axis=1, keepdims=True)
+    return probs.max(axis=1)
+
+
+def outcome_shares(dist, conf, unstable, distance_threshold, confidence_threshold):
+    """Percent of images that the policy would Accept / send to Review / Reject (same rule order as
+    ml/prediction_policy.py: too far -> Rejected; then low confidence or unstable -> Needs review)."""
+    dist, conf, unstable = np.asarray(dist), np.asarray(conf), np.asarray(unstable, dtype=bool)
+    rejected = dist > distance_threshold
+    review = ~rejected & ((conf < confidence_threshold) | unstable)
+    accepted = ~rejected & ~review
+    return {"accept": 100 * accepted.mean(), "review": 100 * review.mean(), "reject": 100 * rejected.mean()}
+
+
+def outcome_table(test_dist, test_conf, ood, model_id, settings):
+    """One row per (distance, confidence) setting: outcome shares for genuine test images and, with OOD
+    data, for unsupported images. Genuine images are assumed stable under the test-time views."""
+    rows = []
+    for distance_threshold, confidence_threshold, label in settings:
+        genuine = outcome_shares(test_dist, test_conf, np.zeros(len(test_dist), bool),
+                                 distance_threshold, confidence_threshold)
+        row = {"setting": label, "T": distance_threshold, "C": confidence_threshold,
+               "genuine_accept_%": round(genuine["accept"], 1), "genuine_review_%": round(genuine["review"], 1),
+               "genuine_reject_%": round(genuine["reject"], 1)}
+        if ood is not None:
+            unsupported = outcome_shares(
+                ood[f"{model_id}_feature_distance"].to_numpy(), ood[f"{model_id}_confidence"].to_numpy(),
+                (ood[f"{model_id}_tta_consistency"] == "LOW").to_numpy(), distance_threshold, confidence_threshold)
+            row["unsupported_ACCEPT_%"] = round(unsupported["accept"], 1)
+            row["unsupported_review_%"] = round(unsupported["review"], 1)
+            row["unsupported_reject_%"] = round(unsupported["reject"], 1)
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def threshold_table(test_dist, ood, model_id, cutoffs, notes=None):
@@ -91,6 +138,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--embeddings", required=True, help="M4_PC1_embeddings.npz from the training notebook")
     parser.add_argument("--ood-csv", help="ood_examples_results_PC1.csv from the training notebook")
+    parser.add_argument("--checkpoint", help="M4_PC1.pt: adds the Accepted / Needs review / Rejected report")
     parser.add_argument("--model-id", default="M4", help="column prefix used in the OOD csv (default M4)")
     parser.add_argument("--out", default=str(OOD_STATS_PATH), help="where to write the statistics file")
     args = parser.parse_args()
@@ -156,6 +204,17 @@ def main():
         print("  If that false-acceptance rate is too high, the distance signal alone cannot meet both goals.")
         print("  The OOD set has only ~100 images and was also used to tune cutoffs, so treat these rates as optimistic.")
     print(f"Currently set in config.py: DISTANCE_REJECT_THRESHOLD = {DISTANCE_REJECT_THRESHOLD}")
+
+    if args.checkpoint:
+        head = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
+        test_conf = head_confidence(test_f, head["classifier.1.weight"].numpy(), head["classifier.1.bias"].numpy())
+        settings = [(DISTANCE_REJECT_THRESHOLD, CONFIDENCE_THRESHOLD, "config.py now")]
+        settings += [(t, c, "") for t in (60, 65, 70) for c in (0.99, 0.999, 0.9995)]
+        print("\nHow the policy would split images (distance gate T, confidence gate C)")
+        print("  genuine_* : real Apple/Banana test images. Want: mostly accept, few review, almost no reject.")
+        print("  unsupported_ACCEPT_% : unsupported images that would still be accepted. Want: close to 0.")
+        print(outcome_table(test_dist, test_conf, ood, args.model_id, settings).to_string(index=False))
+        print("Small samples (about 100 unsupported images, tuned on the same images): treat differences of a few points as noise.")
 
 
 if __name__ == "__main__":

@@ -96,4 +96,4 @@ def test_invalid_input_has_no_prediction_fields():
 
 
 def test_status_values_are_the_strings_stored_in_the_database():
-    assert [s.value for s in PredictionStatus] == ["Accepted", "Needs Review", "Rejected", "Invalid Input"]
+    assert [s.value for s in PredictionStatus] == ["accepted", "needs_review","rejected", "invalid_input"]
