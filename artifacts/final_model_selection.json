@@ -1,0 +1,40 @@
+{
+  "selected_model": "M4",
+  "selection_rationale": "Highest mean accuracy (1.0000); within 0.005 of M3 but consistently outperformed it on every paired computer (Section 17), so the small margin is treated as real, not noise.",
+  "elimination_log": [
+    {
+      "model": "M1",
+      "step": "confidently-wrong rate 1.750 is a clear outlier vs the other models ({'M2': np.float64(0.0), 'M3': np.float64(0.0), 'M4': np.float64(0.0)})"
+    },
+    {
+      "model": "M2",
+      "step": "OOD wrongly-accepted rate 0.130 is a clear outlier vs the other models ({'M1': np.float64(0.075), 'M3': np.float64(0.0), 'M4': np.float64(0.0)})"
+    }
+  ],
+  "recommended_checkpoint_run": "M4_PC1",
+  "checkpoint_path": "results/checkpoints/M4_PC1.pt",
+  "config_hash": "d7e2e21cf167",
+  "dataset_version": "Apple_Banana_Dataset_(Final)",
+  "dataset_fingerprint": "52b395cdef84b0ff",
+  "preprocessing_version": "PP_v1: EXIF-upright, RGB, bicubic resize 128x128, pixels 0-1",
+  "hyperparameters": {
+    "batch_size": 32,
+    "min_delta": 0.001,
+    "label_smoothing": 0.0,
+    "name": "EfficientNetB0 Fine-Tuned",
+    "type": "efficientnet_b0",
+    "dropout": 0.3,
+    "pretrained": true,
+    "unfreeze_from": 6,
+    "init_from": "M3",
+    "optimizer": "adamw",
+    "lr": 0.0001,
+    "weight_decay": 0.0001,
+    "scheduler": "cosine",
+    "epochs": 15,
+    "patience": 5,
+    "augmentation": "base"
+  },
+  "notebook_version": "v1.0",
+  "recorded_at": "2026-10-20T16:37:46"
+}
