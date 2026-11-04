@@ -35,10 +35,13 @@ def to_dicts(rows):
 
 class PredictionService:
 
-    def __init__(self, model_service=None):
+    def __init__(self, model_service=None, fruit_repo=fruit_repository, prediction_repo=prediction_repository, save_statuses=SAVE_TO_HISTORY_STATUSES):
         if model_service == None:
             model_service = load_model_service()
         self.model_service = model_service
+        self.fruit_repo = fruit_repo
+        self.prediction_repo = prediction_repo
+        self.save_statuses = save_statuses
 
     def classify(self, uploaded_file):
         version = self.model_service.model_version
@@ -75,15 +78,15 @@ class PredictionService:
         return ClassificationResponse(prediction=result, fruit_info=fruit_info, history_saved=saved, issues=tuple(issues))
 
     def get_fruit_info(self, model_label):
-        fruit = fruit_repository.get_fruit_by_model_label(model_label)
+        fruit = self.fruit_repo.get_fruit_by_model_label(model_label)
         if fruit == None:
             return None
 
         fruit_id = fruit["fruit_id"]
-        nutrition = fruit_repository.get_nutrition_by_fruit_id(fruit_id)
-        benefits = to_dicts(fruit_repository.get_health_benefits_by_fruit_id(fruit_id))
-        uses = to_dicts(fruit_repository.get_uses_by_fruit_id(fruit_id))
-        facts = to_dicts(fruit_repository.get_fun_facts_by_fruit_id(fruit_id))
+        nutrition = self.fruit_repo.get_nutrition_by_fruit_id(fruit_id)
+        benefits = to_dicts(self.fruit_repo.get_health_benefits_by_fruit_id(fruit_id))
+        uses = to_dicts(self.fruit_repo.get_uses_by_fruit_id(fruit_id))
+        facts = to_dicts(self.fruit_repo.get_fun_facts_by_fruit_id(fruit_id))
 
         if nutrition != None:
             nutrition = dict(nutrition)
@@ -115,23 +118,42 @@ class PredictionService:
     def save_history(self, result, issues):
         # config have names like Needs_Review but the status value is Needs Review
         status_name = result.status.value.replace(" ", "_")
-        if status_name not in SAVE_TO_HISTORY_STATUSES:
+        if status_name not in self.save_statuses:
             return False
         try:
-            prediction_repository.save_prediction(
-                result.fruit_id,
-                result.predicted_class,
-                result.apple_probability,
-                result.banana_probability,
-                result.confidence,
-                result.status.value,
-                result.reason_code,
-                result.model_version,
+            self.prediction_repo.save_prediction(
+                fruit_id=result.fruit_id,
+                predicted_class=result.predicted_class,
+                apple_probability=result.apple_probability,
+                banana_probability=result.banana_probability,
+                confidence=result.confidence,
+                prediction_status=result.status.value,
+                rejection_reason=result.reason_code,
+                model_version=result.model_version,
             )
             return True
         except sqlite3.Error:
             issues.append(HISTORY_NOT_SAVED)
             return False
+
+    def get_history(self):
+        try:
+            rows = self.prediction_repo.get_prediction_history()
+        except sqlite3.Error as error:
+            raise DatabaseUnavailableError("could not read the prediction history") from error
+        history = to_dicts(rows)
+        history.sort(key=lambda item: item["prediction_id"], reverse=True)
+        return history
+
+    @staticmethod
+    def summarise_history(history):
+        summary = get_summary(history)
+        return {
+            "total": summary["total"],
+            "accepted": summary[PredictionStatus.ACCEPTED.value],
+            "needs_review": summary[PredictionStatus.NEEDS_REVIEW.value],
+            "rejected_or_invalid": summary[PredictionStatus.REJECTED.value] + summary[PredictionStatus.INVALID_INPUT.value],
+        }
 
 
 def get_history():
@@ -164,7 +186,7 @@ def get_summary(history):
                 summary["apples"] = summary["apples"] + 1
             elif item["predicted_class"] == "Banana":
                 summary["bananas"] = summary["bananas"] + 1
-        if item["confidence"] != None:
+        if item.get("confidence") != None:
             scores.append(item["confidence"])
     if len(scores) > 0:
         summary["average_confidence"] = sum(scores) / len(scores)
