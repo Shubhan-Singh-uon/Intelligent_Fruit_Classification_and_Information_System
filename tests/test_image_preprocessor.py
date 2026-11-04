@@ -95,7 +95,31 @@ def test_truncated_jpeg_is_unreadable():
 
 
 @pytest.mark.parametrize("fmt", ["GIF", "BMP", "WEBP"])
-def test_valid_image_in_other_format_is_unsupported_not_unreadable(fmt):
-    with pytest.raises(InvalidImageError) as error:
-        preprocess_image(encode(noisy_image(size=(64, 64)), fmt))
-    assert error.value.reason_code == "unsupported_format"
+def test_valid_image_in_other_formats_is_supported(fmt):
+    # Now that we support these formats, this should return an image, not raise an error
+    result = preprocess_image(encode(noisy_image(size=(64, 64)), fmt))
+    assert result.size == IMAGE_SIZE
+    assert result.mode == "RGB"
+
+@pytest.mark.parametrize("fmt", ["GIF", "BMP", "WEBP", "TIFF"])
+def test_valid_image_in_other_formats_is_supported(fmt):
+    # Proves the preprocessor successfully converts these formats to a 128x128 RGB image
+    result = preprocess_image(encode(noisy_image(size=(64, 64)), fmt))
+    assert result.size == IMAGE_SIZE
+    assert result.mode == "RGB"
+
+def test_webp_with_transparency_is_converted_to_rgb():
+    import io
+    from PIL import Image
+    
+    # Create a semi-transparent WEBP image
+    img = Image.new("RGBA", (64, 64), (255, 0, 0, 128)) 
+    buf = io.BytesIO()
+    img.save(buf, format="WEBP")
+    
+    # Run it through the preprocessor
+    result = preprocess_image(buf.getvalue())
+    
+    # It must strip the alpha channel and return standard RGB
+    assert result.mode == "RGB"
+    assert result.size == IMAGE_SIZE
