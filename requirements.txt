@@ -16,3 +16,4 @@ python-dotenv
 torch
 torchvision
 pillow
+pillow-heif  # For HEIC image support

@@ -57,7 +57,7 @@ CONFIDENCE_THRESHOLD = 0.90
 # Feature-distance gate: an image farther than this from BOTH class centroids is
 # treated as unsupported (outcome C).
 #
-# PROVISIONAL. The notebook's configured value (95th percentile of TRAINING
+# The notebook's configured value (95th percentile of TRAINING
 # distances, 35.73 for M4_PC1) rejects about two thirds of genuine test images,
 # so it cannot be used as-is. 
 DISTANCE_REJECT_THRESHOLD = 61.69
