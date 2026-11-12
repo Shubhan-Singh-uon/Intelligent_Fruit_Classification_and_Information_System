@@ -172,6 +172,12 @@ The suite does not need the model files or the dataset, because the model tests 
 
 Use `pytest -v` for all tests to run, or `pytest tests/test_prediction_policy.py` to run a single test file. **All tests are expected to pass.**
 
+**Pillar 4 tests (Hasnain Younas).** `tests/test_hasnain.py` contains 14 tests for `src/services/prediction_service.py` and the Home and Prediction History pages. They use a fake model and build a new SQLite database from `schema.sql` and `seed_fruit.sql` for each test, so they finish in about a second and never change the real database. They check that fruit information appears only for Accepted results, that every outcome is saved to the history (a model crash saves nothing), that a result is still shown when the database is unavailable, that the History summary counts each outcome correctly, and that the pages work with a missing or older database. Run them on their own with:
+
+```powershell
+pytest tests/test_hasnain.py -v
+```
+
 ## 11. Configuration
 
 The settings are in `src/fruit_classifier/config.py`. Changes affect every part of the application and should be agreed by the team.
