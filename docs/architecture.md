@@ -325,6 +325,8 @@ The automated suite runs with `pytest` and does not need the trained model files
 | `test_prediction_service_integration.py` | The service against the real repositories and the real SQL files, using a temporary database |
 | `test_ui_pages.py` | The pages, run headlessly with Streamlit's test harness, for every outcome, including recovery after Streamlit reloads modules |
 | `test_hasnain.py` | Pillar 4 checks of the prediction service and the pages, using a fake model and a new SQLite database for each test: fruit information is given only for Accepted results; Needs Review, Rejected and Invalid Input attempts are saved without it; a model crash saves nothing; a result is still shown when the database is missing; the History summary counts every outcome; the Start Classifying button; the History page with a database, without one, and with an older database that has no `created_at` column |
+| `test_fruit_repository.py` | Database repository operations for retrieving fruit information, including fruit records, nutrition, health benefits, uses, fun facts and their related sources |
+| `test_prediction_repository.py` | Database repository operations for saving prediction attempts and retrieving prediction history, including Accepted, Needs Review, Rejected and Invalid Input records |
 
 The tests contain regression tests for each fault found during development, and the suite was run on Windows (Python 3.9) and Linux (Python 3.12).
 
