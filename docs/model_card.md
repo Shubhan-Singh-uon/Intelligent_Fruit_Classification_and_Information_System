@@ -38,7 +38,7 @@ This card follows the structure proposed by Mitchell et al. (2019). It describes
 
 **Primary use.** To identify whether a picture shows an apple or a banana, as the classification stage of an information system that then shows nutrition, health, usage and general facts about the identified fruit. The model is one component of an academic prototype; the application also decides whether a prediction can be trusted (Section 9).
 
-**Intended users.** Students, markers and other readers of the COMP6900 project.??? $\color{red}{\text{VERIFY WITH SCOPING DOC}}$
+**Intended users.** Students, markers and other readers of the COMP6900 project.
 
 **Out-of-scope uses.** The model must not be used to:
 
